@@ -1,0 +1,17 @@
+# ==============================================================================
+# AI-Based Multi-Defect Railway Monitoring and Severity Assessment
+# Mohan Babu University - Dept. of CSE (AI & ML) - Team B6-B3
+# Ultralytics YOLO Dataset Configuration (Auto-Generated / Validated)
+# ==============================================================================
+
+path: ../data/processed
+train: images/train
+val: images/val
+test: images/test
+nc: 5
+names:
+  0: rail_crack
+  1: missing_fastener
+  2: rail_corrosion
+  3: obstacle
+  4: sleeper_misalignment

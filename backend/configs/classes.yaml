@@ -1,0 +1,113 @@
+# ==============================================================================
+# AI-Based Multi-Defect Railway Monitoring and Severity Assessment
+# Mohan Babu University - Dept. of CSE (AI & ML) - Team B6-B3
+# Canonical Classes, Alias Normalization, and Severity Threshold Configuration
+# ==============================================================================
+
+# Canonical 5-class defect taxonomy
+classes:
+  0: rail_crack
+  1: missing_fastener
+  2: rail_corrosion
+  3: obstacle
+  4: sleeper_misalignment
+
+# Alias resolution mapping for Roboflow and raw label harmonization
+# Maps raw / variant annotations to canonical class keys
+aliases:
+  # --- Class 0: rail_crack ---
+  rail_crack: rail_crack
+  crack: rail_crack
+  broken_rail: rail_crack
+  broken_rail_low: rail_crack
+  broken_rail_medium: rail_crack
+  broken_rail_high: rail_crack
+  glue_crack: rail_crack
+  head_checks: rail_crack
+  head_checks_low: rail_crack
+  head_checks_medium: rail_crack
+  head_checks_high: rail_crack
+  squats: rail_crack
+  squats_low: rail_crack
+  squats_medium: rail_crack
+  squats_high: rail_crack
+  railway_join_bar_defects: rail_crack
+  railway_join_bar_defects_low: rail_crack
+  railway_join_bar_defects_medium: rail_crack
+  railway_join_bar_defects_high: rail_crack
+  transverse_crack: rail_crack
+  longitudinal_crack: rail_crack
+
+  # --- Class 1: missing_fastener ---
+  missing_fastener: missing_fastener
+  fastener: missing_fastener
+  broken_fastener: missing_fastener
+  missing_clip: missing_fastener
+  damaged_fastener: missing_fastener
+  missing_bolt: missing_fastener
+  loose_fastener: missing_fastener
+  clip_missing: missing_fastener
+
+  # --- Class 2: rail_corrosion ---
+  rail_corrosion: rail_corrosion
+  corrosion: rail_corrosion
+  corrosion_low: rail_corrosion
+  corrosion_medium: rail_corrosion
+  corrosion_high: rail_corrosion
+  rust: rail_corrosion
+  rusting: rail_corrosion
+  surface_corrosion: rail_corrosion
+
+  # --- Class 3: obstacle ---
+  obstacle: obstacle
+  object: obstacle
+  foreign_object: obstacle
+  rock: obstacle
+  stone: obstacle
+  debris: obstacle
+  boulder: obstacle
+
+  # --- Class 4: sleeper_misalignment ---
+  sleeper_misalignment: sleeper_misalignment
+  sleeper: sleeper_misalignment
+  misaligned_sleeper: sleeper_misalignment
+  broken_sleeper: sleeper_misalignment
+  tie_defect: sleeper_misalignment
+  tie_misalignment: sleeper_misalignment
+  sleeper_defect: sleeper_misalignment
+
+# Deterministic Severity Thresholds per Class
+severity_thresholds:
+  rail_crack:
+    metric: diagonal_ratio
+    low_max: 0.03        # low < 0.03
+    medium_max: 0.08     # medium <= 0.08 (high > 0.08)
+  rail_corrosion:
+    metric: area_ratio
+    low_max: 0.05        # low < 0.05
+    medium_max: 0.15     # medium <= 0.15 (high > 0.15)
+  missing_fastener:
+    metric: frame_count
+    low_exact: 1         # low == 1
+    medium_exact: 2      # medium == 2
+    high_min: 3          # high >= 3
+  sleeper_misalignment:
+    metric: frame_count
+    low_exact: 1         # low == 1
+    medium_exact: 2      # medium == 2
+    high_min: 3          # high >= 3
+  obstacle:
+    metric: mandatory
+    mandatory_level: HIGH
+
+# Track Risk Index (TRI) severity weights
+risk_weights:
+  LOW: 10
+  MEDIUM: 25
+  HIGH: 50
+
+# Severity hex color codes for telemetry & UI visualization
+severity_colors:
+  LOW: "#D97706"
+  MEDIUM: "#EA580C"
+  HIGH: "#DC2626"

@@ -1,0 +1,84 @@
+# ==============================================================================
+# AI-Based Multi-Defect Railway Monitoring and Severity Assessment
+# Mohan Babu University - Dept. of CSE (AI & ML) - Team B6-B3
+# Git Ignore Configuration
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Raw and Processed Datasets (Keep directory structure via .gitkeep)
+backend/data/raw/**
+!backend/data/raw/
+!backend/data/raw/**/.gitkeep
+
+backend/data/processed/**
+!backend/data/processed/
+!backend/data/processed/**/.gitkeep
+
+backend/data/samples/**
+!backend/data/samples/
+!backend/data/samples/**/.gitkeep
+# ------------------------------------------------------------------------------
+# Model Checkpoints & Weights
+# ------------------------------------------------------------------------------
+backend/models/*
+!backend/models/.gitkeep
+*.pt
+*.pth
+*.onnx
+*.engine
+*.tflite
+runs/
+wandb/
+
+# ------------------------------------------------------------------------------
+# Python & Testing Artifacts
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ------------------------------------------------------------------------------
+# Virtual Environments
+# ------------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# ------------------------------------------------------------------------------
+# Databases & Local Storage
+# ------------------------------------------------------------------------------
+*.db
+*.sqlite
+*.sqlite3
+
+# ------------------------------------------------------------------------------
+# Frontend / Node Artifacts
+# ------------------------------------------------------------------------------
+node_modules/
+dist/
+dist-ssr/
+*.local
+.npm/
+
+# ------------------------------------------------------------------------------
+# IDE & Operating System Files
+# ------------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# ------------------------------------------------------------------------------
+# Never ignore .gitkeep files
+# ------------------------------------------------------------------------------
+!.gitkeep
