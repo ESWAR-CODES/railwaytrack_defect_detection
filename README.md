@@ -169,8 +169,30 @@ Railway-defect-detection/
 │       ├── test_config.py
 │       ├── test_dataset_pipeline.py
 │       └── test_severity_and_vision.py
-└── frontend/
-    └── .gitkeep
+├── frontend/
+│   ├── .env.example
+│   ├── index.html
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   ├── vite.config.ts
+│   └── src/
+│       ├── App.tsx
+│       ├── index.css
+│       ├── main.tsx
+│       ├── vite-env.d.ts
+│       ├── components/
+│       │   ├── AuditHistoryView.tsx
+│       │   ├── Footer.tsx
+│       │   ├── HeroOverview.tsx
+│       │   ├── InspectionWorkbench.tsx
+│       │   ├── ModelDatasetView.tsx
+│       │   └── Navbar.tsx
+│       ├── services/
+│       │   └── api.ts
+│       └── types/
+│           └── api.ts
 ```
 
 ---
@@ -210,19 +232,30 @@ Railway-defect-detection/
   - Graceful fallback for offline execution or unpopulated weights without crashing
   - Comprehensive integration test suite using FastAPI `TestClient` passing all 15 tests
   - Passing all 116 unit and integration tests across the entire test suite
-- [ ] **Phase 5: React 18 + Vite + TypeScript Anveshana-Themed Dashboard**
-  - Futuristic Mohan Babu University Anveshana-themed command interface
-  - Real-time image & video upload with interactive defect bounding overlays
-  - Severity-graded visual telemetry badges, crop galleries, and Track Risk Index gauge
-  - Live inspection history feed and maintenance dispatch report export
+- [x] **Phase 5: React 18 + Vite + TypeScript Anveshana-Themed Dashboard**
+  - Mohan Babu University Anveshana editorial design system (`#0B132B` Navy, `#1C2541` Elevated Navy, `#F5A623` Golden-Orange, `#FDFBF7` Warm Ivory)
+  - Typography system loaded via Google Fonts (`Playfair Display`, `Inter`, `JetBrains Mono`)
+  - 4 clean integrated views:
+    * **Hero & Overview**: Academic credentials (Team B6-B3, Supervisor Ms. K. Sandhya), project abstract, and 5 canonical defect taxonomy cards
+    * **Inspection Workbench**: Drag-and-drop uploader, confidence slider (`0.05`–`0.95`), test pattern generator, side-by-side / YOLO overlay viewer with lightbox, defect crop thumbnails, and JSON/CSV triage export
+    * **Model & Dataset**: Real-time mAP50 / mAP50-95 / precision / recall metrics and multi-source 5,671 image dataset summary
+    * **Audit History**: Chronological log of recent drone inspections with Track Risk Index telemetry
+  - Compiles with 0 TypeScript and Vite build errors
+  - 100% test preservation (116/116 backend tests green)
 
 ---
 
 ## ⚡ Quickstart & Verification
 
-### 1. Install Backend Dependencies
+### 1. Install Dependencies
 ```bash
+# Backend dependencies
 pip install -r backend/requirements.txt
+
+# Frontend dependencies
+cd frontend
+npm install
+cd ..
 ```
 
 ### 2. Prepare & Harmonize Dataset
@@ -243,9 +276,16 @@ python backend/scripts/train_yolo.py --epochs 50 --imgsz 640 --batch 16
 ```bash
 uvicorn backend.api.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-Interactive Swagger API documentation will be accessible at [http://localhost:8000/docs](http://localhost:8000/docs).
+Interactive Swagger API documentation: [http://localhost:8000/docs](http://localhost:8000/docs).
 
-### 5. Run Test Suite
+### 5. Start React Frontend Client
+```bash
+cd frontend
+npm run dev
+```
+Web Dashboard will be accessible at: [http://localhost:5173](http://localhost:5173).
+
+### 6. Run Complete Test Suite
 ```bash
 pytest backend/tests/ -v
 ```

@@ -69,6 +69,8 @@ dist/
 dist-ssr/
 *.local
 .npm/
+.env
+!.env.example
 
 # ------------------------------------------------------------------------------
 # IDE & Operating System Files
