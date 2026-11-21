@@ -22,13 +22,16 @@ backend/data/samples/**
 # ------------------------------------------------------------------------------
 backend/models/*
 !backend/models/.gitkeep
+backend/models/*.json
+backend/runs/
+runs/
+wandb/
 *.pt
 *.pth
 *.onnx
 *.engine
 *.tflite
-runs/
-wandb/
+backend/configs/resolved_*.yaml
 
 # ------------------------------------------------------------------------------
 # Python & Testing Artifacts

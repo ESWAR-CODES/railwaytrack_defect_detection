@@ -130,7 +130,11 @@ Railway-defect-detection/
 ├── README.md
 ├── backend/
 │   ├── api/
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── routes.py
+│   │   ├── schemas.py
+│   │   └── store.py
 │   ├── configs/
 │   │   ├── classes.yaml
 │   │   └── railway_dataset.yaml
@@ -146,15 +150,25 @@ Railway-defect-detection/
 │   ├── engine/
 │   │   ├── __init__.py
 │   │   ├── config_loader.py
-│   │   └── dataset_pipeline.py
+│   │   ├── dataset_pipeline.py
+│   │   ├── inference_service.py
+│   │   ├── severity_engine.py
+│   │   ├── vision_annotator.py
+│   │   └── yolo_trainer.py
 │   ├── models/
+│   │   ├── best.pt
+│   │   ├── evaluation_metrics.json
+│   │   └── last.pt
 │   ├── requirements.txt
 │   ├── scripts/
-│   │   └── prepare_dataset.py
+│   │   ├── prepare_dataset.py
+│   │   └── train_yolo.py
 │   └── tests/
 │       ├── __init__.py
+│       ├── test_api.py
 │       ├── test_config.py
-│       └── test_dataset_pipeline.py
+│       ├── test_dataset_pipeline.py
+│       └── test_severity_and_vision.py
 └── frontend/
     └── .gitkeep
 ```
@@ -179,18 +193,28 @@ Railway-defect-detection/
   - Drone-vision aerial augmentations (rotation ±15°, motion blur, fog/rain, illumination changes) adding 696 training samples (total: 5,671 processed images)
   - Generating comprehensive JSON report (`backend/data/processed/dataset_report.json`) and updating `backend/configs/railway_dataset.yaml`
   - Passing all 85 unit and integration tests in `backend/tests/`
-- [ ] **Phase 3: YOLO Model Training & Fine-Tuning**
-  - YOLOv8/YOLOv11 model training with transfer learning
-  - Precision, Recall, mAP@0.5, and mAP@0.5:0.95 evaluation
-- [ ] **Phase 4: Severity Assessment Engine & Feature Extraction**
-  - OpenCV geometric contour and bounding box analysis
-  - Composite Track Risk Index (TRI) generation
-- [ ] **Phase 5: FastAPI REST Service & Telemetry Streaming**
-  - Image, video, and drone stream inference endpoints
-  - Geo-referenced defect logging and geoJSON export
-- [ ] **Phase 6: React + Vite + TypeScript Anveshana-Themed Dashboard**
-  - Real-time video canvas with defect overlays
-  - Interactive risk heatmap and maintenance dispatch reports
+- [x] **Phase 3: YOLO Model Training, Severity Engine & Vision Annotator**
+  - Ultralytics YOLOv11/YOLOv8 training and validation engine with auto device detection (`cuda` / `cpu`)
+  - Deterministic defect severity evaluation with geometric ratios (`area_ratio`, `diagonal_ratio`) and count escalation
+  - Composite Track Risk Index (TRI) clamping to `[0.0, 100.0]` with actionable dispatch recommendations
+  - High-contrast OpenCV visual annotation engine with telemetry HUD strip and thumbnail patch extraction
+  - High-level inference orchestrator (`InferenceService`) for image paths, numpy arrays, and byte streams
+  - Model checkpoint export (`backend/models/best.pt`, `last.pt`) and evaluation metrics report (`evaluation_metrics.json`)
+  - Passing all 101 unit and integration tests in `backend/tests/`
+- [x] **Phase 4: FastAPI REST Service & Inspection Backend**
+  - Robust Pydantic v2 data schemas (`HealthResponse`, `DetectionItem`, `InspectionSummary`, `InspectionResponse`, `MetricsResponse`, `InspectionHistoryResponse`)
+  - RESTful endpoints under `/api/v1` (`/health`, `/inspect`, `/metrics`, `/history`)
+  - Multipart image upload supporting `.jpg`, `.jpeg`, `.png`, `.webp` with base64 visual overlays and thumbnail crops
+  - Configurable query and form parameters with strict boundary clamping (`conf_threshold` between 0.05 and 0.95)
+  - Thread-safe in-memory inspection history store with capacity limiting and eviction
+  - Graceful fallback for offline execution or unpopulated weights without crashing
+  - Comprehensive integration test suite using FastAPI `TestClient` passing all 15 tests
+  - Passing all 116 unit and integration tests across the entire test suite
+- [ ] **Phase 5: React 18 + Vite + TypeScript Anveshana-Themed Dashboard**
+  - Futuristic Mohan Babu University Anveshana-themed command interface
+  - Real-time image & video upload with interactive defect bounding overlays
+  - Severity-graded visual telemetry badges, crop galleries, and Track Risk Index gauge
+  - Live inspection history feed and maintenance dispatch report export
 
 ---
 
@@ -206,9 +230,24 @@ pip install -r backend/requirements.txt
 python backend/scripts/prepare_dataset.py
 ```
 
-### 3. Run Test Suite
+### 3. Train YOLO Model (Smoke Test / Full Training)
+```bash
+# Fast smoke test on CPU/GPU
+python backend/scripts/train_yolo.py --epochs 2 --imgsz 320 --batch 16 --fraction 0.02
+
+# Full production training run
+python backend/scripts/train_yolo.py --epochs 50 --imgsz 640 --batch 16
+```
+
+### 4. Start FastAPI Backend Server
+```bash
+uvicorn backend.api.main:app --host 0.0.0.0 --port 8000 --reload
+```
+Interactive Swagger API documentation will be accessible at [http://localhost:8000/docs](http://localhost:8000/docs).
+
+### 5. Run Test Suite
 ```bash
 pytest backend/tests/ -v
 ```
 
-All 85 tests will execute, validating canonical taxonomy integrity, Roboflow alias normalization, deterministic threshold boundaries, YOLO dataset configuration, bounding box clamping, 70/20/10 deterministic splitting, and Albumentations drone-vision augmentations.
+All 116 tests will execute across configuration validation, dataset preprocessing & augmentation, geometric defect severity assessment, OpenCV vision annotation, YOLO model orchestration, and FastAPI REST endpoints.
