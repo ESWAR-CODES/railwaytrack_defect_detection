@@ -87,3 +87,6 @@ ehthumbs.db
 # Never ignore .gitkeep files
 # ------------------------------------------------------------------------------
 !.gitkeep
+
+.venv-gpu/
+

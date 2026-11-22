@@ -1,8 +1,5 @@
 /**
  * Strict TypeScript Type Definitions mirroring Backend API Schemas.
- * 
- * Mohan Babu University - Dept. of CSE (AI & ML) - Team B6-B3.
- * Phase 5: React Frontend & Full-Stack Integration.
  */
 
 export type SeverityLevel = "LOW" | "MEDIUM" | "HIGH";
@@ -95,3 +92,16 @@ export interface InspectionHistoryResponse {
   total_inspections: number;
   items: InspectionHistoryItem[];
 }
+
+export interface SampleItem {
+  id: string;
+  filename: string;
+  split: string;
+  url: string;
+  label?: string | null;
+}
+
+export interface SampleListResponse {
+  samples: SampleItem[];
+}
+

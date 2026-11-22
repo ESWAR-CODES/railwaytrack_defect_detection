@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, AlertTriangle, Layers, Crosshair, Cpu, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { ArrowRight, AlertTriangle, Layers, Crosshair, Cpu, ShieldAlert } from "lucide-react";
 
 interface HeroOverviewProps {
   onLaunchWorkbench: () => void;
@@ -10,220 +10,172 @@ export const HeroOverview: React.FC<HeroOverviewProps> = ({ onLaunchWorkbench })
     {
       id: 0,
       name: "rail_crack",
-      displayTitle: "Rail Crack & Joint Fracture",
-      severityRule: "Geometric Diagonal Ratio (Low <0.03, Medium ≤0.08, High >0.08)",
-      riskWeight: "10 / 25 / 50 pts",
-      badgeColor: "bg-red-950 text-red-300 border-red-700",
-      description: "Structural fissures, squats, head checks, and transverse/longitudinal web breaks.",
+      displayTitle: "Rail Crack",
+      severityRule: "Evaluated by diagonal dimension ratio (Low <0.03, Medium ≤0.08, High >0.08).",
       icon: AlertTriangle,
+      badge: "Low / Med / High",
+      accent: "text-red-700 bg-red-50 border-red-200",
     },
     {
       id: 1,
       name: "missing_fastener",
-      displayTitle: "Missing Fastener & Clip",
-      severityRule: "Density Escalation (1 = Low, 2 = Medium, ≥3 = High Emergency)",
-      riskWeight: "10 / 25 / 50 pts",
-      badgeColor: "bg-orange-950 text-orange-300 border-orange-700",
-      description: "Dislodged Pandrol clips, absent tie-plate bolts, or loose elastic rail fastenings.",
+      displayTitle: "Missing Fastener",
+      severityRule: "Escalated by occurrence count (1 = Low, 2 = Medium, ≥3 = High).",
       icon: Crosshair,
+      badge: "Count Escalated",
+      accent: "text-orange-700 bg-orange-50 border-orange-200",
     },
     {
       id: 2,
       name: "rail_corrosion",
-      displayTitle: "Rail Corrosion & Surface Rust",
-      severityRule: "Surface Area Coverage (Low <0.05, Medium ≤0.15, High >0.15)",
-      riskWeight: "10 / 25 / 50 pts",
-      badgeColor: "bg-amber-950 text-amber-300 border-amber-700",
-      description: "Atmospheric oxidation, material pitting, and metal flaking degrading rail strength.",
+      displayTitle: "Rail Corrosion",
+      severityRule: "Evaluated by surface area coverage (Low <0.05, Medium ≤0.15, High >0.15).",
       icon: Layers,
+      badge: "Area Ratio",
+      accent: "text-amber-700 bg-amber-50 border-amber-200",
     },
     {
       id: 3,
       name: "obstacle",
-      displayTitle: "Track Obstacle & Foreign Object",
-      severityRule: "Mandatory Critical Severity (Direct High Escalation)",
-      riskWeight: "50 pts (Critical)",
-      badgeColor: "bg-red-950 text-red-300 border-red-700",
-      description: "Right-of-way intrusions, fallen debris, boulders, or misplaced equipment on ballast.",
+      displayTitle: "Track Obstacle",
+      severityRule: "Mandatory immediate High severity for foreign object intrusions.",
       icon: ShieldAlert,
+      badge: "Mandatory High",
+      accent: "text-red-700 bg-red-50 border-red-200",
     },
     {
       id: 4,
       name: "sleeper_misalignment",
-      displayTitle: "Sleeper Angular Misalignment",
-      severityRule: "Cluster Count Escalation (1 = Low, 2 = Medium, ≥3 = High Hazard)",
-      riskWeight: "10 / 25 / 50 pts",
-      badgeColor: "bg-orange-950 text-orange-300 border-orange-700",
-      description: "Concrete/timber tie rotation, ballast subsidence, or sleeper spacing irregularity.",
+      displayTitle: "Sleeper Misalignment",
+      severityRule: "Evaluated by cluster count (1 = Low, 2 = Medium, ≥3 = High).",
       icon: Cpu,
+      badge: "Count Escalated",
+      accent: "text-orange-700 bg-orange-50 border-orange-200",
     },
   ];
 
   return (
-    <section className="space-y-16 pb-12">
-      {/* Editorial Navy Hero Section */}
-      <div className="bg-navy text-white rounded-card p-8 md:p-14 shadow-editorial relative overflow-hidden border border-navy-surface">
-        {/* Subtle grid background texture */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#F5A623_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div className="-mt-8 md:-mt-10 -mx-4 sm:-mx-6 lg:-mx-8">
+      {/* Full-Bleed Edge-to-Edge Cinematic Navy Hero Band */}
+      <section className="bg-navy text-white pt-20 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden border-b border-navy-surface">
+        {/* Subtle geometric track lines background pattern */}
+        <div
+          className="absolute inset-0 opacity-10 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg, #F5A623 1px, transparent 1px), linear-gradient(0deg, #1C2541 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        ></div>
 
-        <div className="relative z-10 max-w-4xl space-y-6">
-          {/* Academic Badge */}
+        <div className="relative z-10 max-w-5xl mx-auto space-y-6 text-center md:text-left">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-btn bg-navy-surface border border-navy-light text-xs font-telemetry text-gold">
-            <span className="w-2 h-2 rounded-full bg-gold"></span>
-            <span>MBU DEPT. OF CSE (AI & ML) • TEAM B6-B3 • SUPERVISOR: MS. K. SANDHYA</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-gold"></span>
+            <span>AERIAL DRONE COMPUTER VISION & TELEMETRY</span>
           </div>
 
-          {/* Editorial Display Heading */}
-          <h1 className="font-editorial text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
-            AI-Based Multi-Defect Railway Monitoring & Severity Assessment Using Drone Vision
+          <h1 className="font-editorial text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-white max-w-4xl">
+            Autonomous Multi-Defect Railway Vision & Severity Assessment
           </h1>
 
-          {/* Research Abstract */}
-          <p className="text-base sm:text-lg text-slate-300 font-sans leading-relaxed max-w-3xl">
-            An advanced computer vision platform combining high-resolution aerial drone imagery with fine-tuned
-            <strong className="text-white font-semibold"> Ultralytics YOLOv11</strong> detection and deterministic OpenCV geometric profiling.
-            Automatically quantifies railway defect severity, calculates a unified
-            <strong className="text-gold font-semibold"> Track Risk Index (0–100)</strong>, and prioritizes maintenance crew dispatches in real time.
+          <p className="text-base sm:text-xl text-slate-300 font-sans leading-relaxed max-w-3xl">
+            High-resolution drone vision combined with fine-tuned YOLOv11 and deterministic geometric profiling.
+            Instantly identifies track surface anomalies, missing fastenings, and obstacles while calculating a standardized 0–100 Track Risk Index for maintenance dispatch.
           </p>
 
-          {/* Call to Actions & Telemetry Strip */}
-          <div className="pt-4 flex flex-wrap items-center gap-4">
+          <div className="pt-4 flex flex-wrap items-center justify-center md:justify-start gap-4">
             <button
               onClick={onLaunchWorkbench}
               className="inline-flex items-center space-x-2.5 px-6 py-3.5 rounded-btn bg-gold text-navy font-semibold text-sm hover:bg-gold-hover transition-all shadow-glow hover:translate-y-[-1px]"
             >
-              <span>Launch Inspection Workbench</span>
+              <span>Open Inspection Workbench</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <div className="flex items-center space-x-3 text-xs font-telemetry text-slate-400 bg-navy-surface/80 px-4 py-3 rounded-btn border border-navy-light">
-              <span className="text-emerald-400 font-semibold">5 Canonical Classes</span>
+              <span className="text-emerald-400 font-semibold">5 Defect Classes</span>
               <span>•</span>
-              <span className="text-gold font-semibold">4,975 + 696 Dataset</span>
+              <span className="text-gold font-semibold">Real-Time TRI (0–100)</span>
               <span>•</span>
-              <span className="text-slate-300">FastAPI REST v1</span>
+              <span className="text-slate-300">FastAPI + OpenCV</span>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Track Risk Index Methodology Banner */}
-      <div className="bg-surface-card rounded-card p-6 border border-border-muted shadow-card flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div className="space-y-1 max-w-2xl">
-          <div className="flex items-center space-x-2">
-            <span className="text-xs font-telemetry uppercase tracking-wider font-bold text-navy">
-              Standardized Severity Assessment Formula
-            </span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded-btn bg-amber-100 text-amber-800 font-telemetry font-bold">
-              Deterministic
-            </span>
-          </div>
-          <p className="text-xs text-text-muted leading-relaxed">
-            Every defect detection is mathematically scored using geometric bounding dimensions and cluster density.
-            Track Risk Index is defined as: <code className="font-telemetry bg-surface px-1.5 py-0.5 rounded text-navy font-semibold">TRI = min(100.0, Σ Weight(severity_i))</code> where LOW = 10 pts, MEDIUM = 25 pts, and HIGH = 50 pts.
+      {/* Airy, Unboxed Editorial Section on Warm Ivory */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
+        {/* Severity & Track Risk Index Methodology Overview */}
+        <div className="border-b border-border-muted pb-8 space-y-2">
+          <h2 className="font-editorial text-2xl sm:text-3xl font-bold text-navy">
+            Target Defect Taxonomy & Severity Rules
+          </h2>
+          <p className="text-sm text-text-muted max-w-3xl">
+            Each detection is classified into one of 5 canonical defect categories and rated as <strong className="text-amber-700">Low (10 pts)</strong>, <strong className="text-orange-700">Medium (25 pts)</strong>, or <strong className="text-red-700">High (50 pts)</strong>, culminating in a composite Track Risk Index clamped to 0–100.
           </p>
         </div>
-        <div className="flex items-center gap-2 font-telemetry text-xs shrink-0">
-          <div className="px-3 py-2 rounded-btn bg-amber-50 border border-amber-200 text-amber-900 text-center">
-            <div className="text-[10px] text-amber-700 font-bold">LOW RISK</div>
-            <div className="font-bold">10 pts</div>
-          </div>
-          <div className="px-3 py-2 rounded-btn bg-orange-50 border border-orange-200 text-orange-900 text-center">
-            <div className="text-[10px] text-orange-700 font-bold">MEDIUM RISK</div>
-            <div className="font-bold">25 pts</div>
-          </div>
-          <div className="px-3 py-2 rounded-btn bg-red-50 border border-red-200 text-red-900 text-center">
-            <div className="text-[10px] text-red-700 font-bold">HIGH RISK</div>
-            <div className="font-bold">50 pts</div>
-          </div>
-        </div>
-      </div>
 
-      {/* Canonical Defect Taxonomy Grid */}
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-border-muted pb-4">
-          <div>
-            <h2 className="font-editorial text-2xl font-bold text-navy">
-              Canonical Railway Defect Taxonomy
-            </h2>
-            <p className="text-xs text-text-muted mt-1">
-              Harmonized across multi-source drone datasets into 5 standardized track inspection classes.
-            </p>
-          </div>
-          <div className="text-xs font-telemetry text-slate-500">
-            Rule-Based Severity Mapping
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* 5 Canonical Defect Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {defectClasses.map((item) => {
-            const IconComponent = item.icon;
+            const Icon = item.icon;
             return (
               <div
                 key={item.id}
-                className="bg-surface-card rounded-card p-5 border border-border-muted hover:border-gold/50 shadow-card hover:shadow-editorial transition-all space-y-3 flex flex-col justify-between"
+                className="bg-white rounded-card p-6 border border-border-muted hover:border-gold/50 shadow-card hover:shadow-editorial transition-all space-y-4"
               >
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <div className="p-1.5 rounded-btn bg-navy/5 text-navy">
-                        <IconComponent className="w-4 h-4" />
-                      </div>
-                      <span className="font-telemetry text-xs font-bold text-navy">
-                        Class {item.id}
-                      </span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2.5">
+                    <div className="w-8 h-8 rounded-btn bg-navy/5 flex items-center justify-center text-navy">
+                      <Icon className="w-4 h-4 text-navy" />
                     </div>
-                    <span className={`text-[10px] font-telemetry font-bold px-2 py-0.5 rounded-btn border ${item.badgeColor}`}>
-                      {item.riskWeight}
+                    <span className="font-telemetry text-xs font-bold text-slate-500">
+                      Class {item.id}
                     </span>
                   </div>
+                  <span className={`text-[11px] font-telemetry font-semibold px-2 py-0.5 rounded border ${item.accent}`}>
+                    {item.badge}
+                  </span>
+                </div>
 
-                  <h3 className="font-editorial text-base font-bold text-navy">
+                <div className="space-y-1.5">
+                  <h3 className="font-editorial text-lg font-bold text-navy">
                     {item.displayTitle}
                   </h3>
-
-                  <p className="text-xs text-text-muted leading-relaxed">
-                    {item.description}
-                  </p>
+                  <code className="text-xs font-telemetry text-gold block">
+                    {item.name}
+                  </code>
                 </div>
 
-                <div className="pt-3 border-t border-border-muted text-[11px] font-telemetry text-slate-600 bg-surface/50 p-2.5 rounded-btn space-y-1">
-                  <div className="text-[10px] uppercase font-bold text-slate-400">Severity Assessment Rule:</div>
-                  <div className="font-medium text-slate-700">{item.severityRule}</div>
-                </div>
+                <p className="text-xs text-text-muted leading-relaxed">
+                  {item.severityRule}
+                </p>
               </div>
             );
           })}
 
-          {/* Track Maintenance Clearance Card */}
-          <div className="bg-gradient-to-br from-emerald-950/20 to-emerald-900/10 rounded-card p-5 border border-emerald-300 shadow-card flex flex-col justify-between space-y-3">
+          {/* Quickstart Callout Card */}
+          <div className="bg-navy text-white rounded-card p-6 border border-navy-surface shadow-card flex flex-col justify-between space-y-4">
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="p-1.5 rounded-btn bg-emerald-100 text-emerald-800">
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                  <span className="font-telemetry text-xs font-bold text-emerald-900">
-                    Nominal Health
-                  </span>
-                </div>
-                <span className="text-[10px] font-telemetry font-bold px-2 py-0.5 rounded-btn bg-emerald-100 text-emerald-900 border border-emerald-300">
-                  0 pts
-                </span>
-              </div>
-              <h3 className="font-editorial text-base font-bold text-emerald-950">
-                Track Clearance Nominal
+              <span className="text-[10px] font-telemetry font-bold text-gold uppercase tracking-wider">
+                Live Demonstration
+              </span>
+              <h3 className="font-editorial text-lg font-bold">
+                Pre-Loaded Track Samples
               </h3>
-              <p className="text-xs text-emerald-900/80 leading-relaxed">
-                Clear railway right-of-way with secure Pandrol clips, intact rail head surfaces, and zero sleeper skew. Regular drone surveillance schedule maintained.
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Experience real-time defect localization and severity profiling using pre-loaded test split imagery or custom aerial drone photographs.
               </p>
             </div>
-            <div className="pt-3 border-t border-emerald-200 text-[11px] font-telemetry text-emerald-900 bg-emerald-50/70 p-2.5 rounded-btn">
-              <div className="text-[10px] uppercase font-bold text-emerald-700">Dispatch Status:</div>
-              <div className="font-medium">Clear for standard operational speed</div>
-            </div>
+            <button
+              onClick={onLaunchWorkbench}
+              className="w-full py-2.5 rounded-btn bg-gold hover:bg-gold-hover text-navy font-semibold text-xs transition-colors flex items-center justify-center space-x-1.5"
+            >
+              <span>Launch Demo Workbench</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };

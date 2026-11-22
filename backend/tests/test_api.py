@@ -325,3 +325,44 @@ def test_inspection_store_eviction() -> None:
     assert recent[0].inspection_id == "id_4"
     assert recent[1].inspection_id == "id_3"
     assert recent[2].inspection_id == "id_2"
+
+
+# ------------------------------------------------------------------------------
+# 6. Sample Dataset Images Tests
+# ------------------------------------------------------------------------------
+
+def test_list_samples_endpoint(client: TestClient) -> None:
+    """Verify /api/v1/samples returns available dataset and synthetic test patterns."""
+    response = client.get("/api/v1/samples")
+    assert response.status_code == 200
+    data = response.json()
+    assert "samples" in data
+    assert len(data["samples"]) >= 3
+    first = data["samples"][0]
+    assert "id" in first
+    assert "filename" in first
+    assert "split" in first
+    assert "url" in first
+    assert first["url"].startswith("/api/v1/samples/")
+
+
+def test_get_synthetic_sample_image(client: TestClient) -> None:
+    """Verify /api/v1/samples/{filename} generates and serves synthetic JPEG bytes."""
+    response = client.get("/api/v1/samples/synthetic_rail_crack.jpg")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "image/jpeg"
+    assert len(response.content) > 1000
+
+    # Verify bytes form a valid image
+    arr = np.frombuffer(response.content, np.uint8)
+    img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+    assert img is not None
+    assert img.shape == (480, 480, 3)
+
+
+def test_get_sample_image_nonexistent(client: TestClient) -> None:
+    """Verify /api/v1/samples/{filename} returns 404 for unknown image file."""
+    response = client.get("/api/v1/samples/totally_non_existent_file_9999.jpg")
+    assert response.status_code == 404
+    assert "not found" in response.json()["detail"].lower()
+

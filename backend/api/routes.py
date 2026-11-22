@@ -15,7 +15,9 @@ from pathlib import Path
 from typing import List, Optional
 
 import cv2
+import numpy as np
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
+from fastapi.responses import Response
 
 from backend.api.schemas import (
     DetectionItem,
@@ -25,6 +27,8 @@ from backend.api.schemas import (
     InspectionResponse,
     InspectionSummary,
     MetricsResponse,
+    SampleItem,
+    SampleListResponse,
 )
 from backend.api.store import InspectionStore, get_inspection_store
 from backend.engine.config_loader import ClassesConfig, load_classes_config
@@ -277,4 +281,149 @@ def get_history(
     return InspectionHistoryResponse(
         total_inspections=store.count(),
         items=items,
+    )
+
+
+# ------------------------------------------------------------------------------
+# Sample Dataset Images for Live Demo Execution
+# ------------------------------------------------------------------------------
+
+def get_sample_directories() -> List[Path]:
+    """Retrieve search locations for processed and fixture railway images."""
+    backend_dir = Path(__file__).resolve().parent.parent
+    return [
+        backend_dir / "data" / "processed" / "images" / "test",
+        backend_dir / "data" / "processed" / "images" / "val",
+        backend_dir / "data" / "processed" / "images" / "train",
+        backend_dir / "data" / "samples",
+    ]
+
+
+def generate_synthetic_track_image(sample_key: str = "crack") -> bytes:
+    """Generate in-memory high-contrast synthetic railway track pattern."""
+    img = np.full((480, 480, 3), (115, 120, 125), dtype=np.uint8)
+
+    # Ballast texture
+    noise = np.random.randint(-15, 15, (480, 480, 3), dtype=np.int16)
+    img = np.clip(img.astype(np.int16) + noise, 0, 255).astype(np.uint8)
+
+    # Sleepers (ties)
+    for y in range(35, 480, 75):
+        cv2.rectangle(img, (50, y), (430, y + 36), (45, 38, 30), -1)
+        # Fastener plates
+        cv2.rectangle(img, (120, y - 4), (148, y + 40), (135, 145, 150), -1)
+        cv2.rectangle(img, (332, y - 4), (360, y + 40), (135, 145, 150), -1)
+
+    # Steel rails
+    cv2.rectangle(img, (128, 0), (140, 480), (185, 195, 200), -1)
+    cv2.rectangle(img, (340, 0), (352, 480), (185, 195, 200), -1)
+
+    if sample_key == "crack":
+        # Draw rail crack fracture on left rail
+        pts = np.array([[129, 210], [134, 222], [130, 238], [138, 252]], np.int32)
+        cv2.polylines(img, [pts], False, (20, 20, 20), 3)
+    elif sample_key == "fastener":
+        # Missing fastener dislodged area on left rail
+        cv2.circle(img, (134, 185), 14, (70, 50, 40), -1)
+    elif sample_key == "corrosion":
+        # Surface oxidation & rust on right rail
+        for cy in range(140, 320, 8):
+            cv2.circle(img, (346 + np.random.randint(-3, 4), cy), np.random.randint(4, 9), (35, 80, 175), -1)
+
+    success, enc = cv2.imencode(".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, 90])
+    return enc.tobytes() if success else b""
+
+
+SYNTHETIC_CATALOG: Dict[str, Dict[str, str]] = {
+    "synthetic_rail_crack.jpg": {
+        "label": "Synthetic Reference: Rail Crack & Web Fracture",
+        "key": "crack",
+    },
+    "synthetic_missing_fastener.jpg": {
+        "label": "Synthetic Reference: Missing Pandrol Fastener Clip",
+        "key": "fastener",
+    },
+    "synthetic_rail_corrosion.jpg": {
+        "label": "Synthetic Reference: Severe Rail Oxidation & Corrosion",
+        "key": "corrosion",
+    },
+}
+
+
+@router.get("/samples", response_model=SampleListResponse)
+def list_samples() -> SampleListResponse:
+    """Return pre-loaded dataset samples and reference synthetic track patterns for demo execution."""
+    samples: List[SampleItem] = []
+    seen_filenames = set()
+
+    # 1. Collect real processed test split images
+    for search_dir in get_sample_directories():
+        if search_dir.exists():
+            split_name = search_dir.name
+            for img_path in sorted(search_dir.glob("*.jpg")):
+                if img_path.name in seen_filenames:
+                    continue
+                seen_filenames.add(img_path.name)
+
+                # Check if paired label has detections
+                label_hint = f"Real Dataset Sample ({split_name} split)"
+                lbl_path = img_path.parent.parent / "labels" / split_name / f"{img_path.stem}.txt"
+                if lbl_path.exists() and lbl_path.stat().st_size > 0:
+                    label_hint = f"Real Drone Vision Track Sample ({split_name} split, Verified Defect)"
+
+                samples.append(
+                    SampleItem(
+                        id=f"sample_{len(samples) + 1}",
+                        filename=img_path.name,
+                        split=split_name,
+                        url=f"/api/v1/samples/{img_path.name}",
+                        label=label_hint,
+                    )
+                )
+                if len(samples) >= 8:
+                    break
+        if len(samples) >= 8:
+            break
+
+    # 2. Append reference synthetic track patterns
+    for syn_name, meta in SYNTHETIC_CATALOG.items():
+        samples.append(
+            SampleItem(
+                id=f"synthetic_{meta['key']}",
+                filename=syn_name,
+                split="synthetic",
+                url=f"/api/v1/samples/{syn_name}",
+                label=meta["label"],
+            )
+        )
+
+    return SampleListResponse(samples=samples)
+
+
+@router.get("/samples/{filename}")
+def get_sample_image(filename: str):
+    """Serve raw image bytes for a dataset sample or synthetic pattern."""
+    safe_filename = Path(filename).name
+
+    # Check synthetic patterns
+    if safe_filename in SYNTHETIC_CATALOG:
+        img_bytes = generate_synthetic_track_image(SYNTHETIC_CATALOG[safe_filename]["key"])
+        return Response(content=img_bytes, media_type="image/jpeg")
+
+    # Search physical sample locations
+    for search_dir in get_sample_directories():
+        candidate = search_dir / safe_filename
+        if candidate.exists() and candidate.is_file():
+            try:
+                with open(candidate, "rb") as f:
+                    content = f.read()
+                media_type = "image/png" if candidate.suffix.lower() == ".png" else "image/jpeg"
+                return Response(content=content, media_type=media_type)
+            except Exception as e:
+                logger.error(f"Failed to read sample image '{candidate}': {e}")
+                raise HTTPException(status_code=500, detail=f"Failed to read image file: {e}")
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"Sample railway image '{safe_filename}' not found on server.",
     )

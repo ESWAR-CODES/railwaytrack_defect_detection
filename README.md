@@ -224,24 +224,26 @@ Railway-defect-detection/
   - Model checkpoint export (`backend/models/best.pt`, `last.pt`) and evaluation metrics report (`evaluation_metrics.json`)
   - Passing all 101 unit and integration tests in `backend/tests/`
 - [x] **Phase 4: FastAPI REST Service & Inspection Backend**
-  - Robust Pydantic v2 data schemas (`HealthResponse`, `DetectionItem`, `InspectionSummary`, `InspectionResponse`, `MetricsResponse`, `InspectionHistoryResponse`)
-  - RESTful endpoints under `/api/v1` (`/health`, `/inspect`, `/metrics`, `/history`)
+  - Robust Pydantic v2 data schemas (`HealthResponse`, `DetectionItem`, `InspectionSummary`, `InspectionResponse`, `MetricsResponse`, `InspectionHistoryResponse`, `SampleListResponse`)
+  - RESTful endpoints under `/api/v1` (`/health`, `/inspect`, `/metrics`, `/history`, `/samples`, `/samples/{filename}`)
   - Multipart image upload supporting `.jpg`, `.jpeg`, `.png`, `.webp` with base64 visual overlays and thumbnail crops
+  - Pre-loaded dataset sample streaming and synthetic track reference generator for live faculty demos
   - Configurable query and form parameters with strict boundary clamping (`conf_threshold` between 0.05 and 0.95)
   - Thread-safe in-memory inspection history store with capacity limiting and eviction
   - Graceful fallback for offline execution or unpopulated weights without crashing
-  - Comprehensive integration test suite using FastAPI `TestClient` passing all 15 tests
-  - Passing all 116 unit and integration tests across the entire test suite
+  - Comprehensive integration test suite using FastAPI `TestClient` passing all 18 tests
+  - Passing all 119 unit and integration tests across the entire test suite
 - [x] **Phase 5: React 18 + Vite + TypeScript Anveshana-Themed Dashboard**
-  - Mohan Babu University Anveshana editorial design system (`#0B132B` Navy, `#1C2541` Elevated Navy, `#F5A623` Golden-Orange, `#FDFBF7` Warm Ivory)
+  - Anveshana editorial design system (`#0B132B` Navy, `#1C2541` Elevated Navy, `#F5A623` Golden-Orange, `#FDFBF7` Warm Ivory)
   - Typography system loaded via Google Fonts (`Playfair Display`, `Inter`, `JetBrains Mono`)
-  - 4 clean integrated views:
-    * **Hero & Overview**: Academic credentials (Team B6-B3, Supervisor Ms. K. Sandhya), project abstract, and 5 canonical defect taxonomy cards
-    * **Inspection Workbench**: Drag-and-drop uploader, confidence slider (`0.05`–`0.95`), test pattern generator, side-by-side / YOLO overlay viewer with lightbox, defect crop thumbnails, and JSON/CSV triage export
-    * **Model & Dataset**: Real-time mAP50 / mAP50-95 / precision / recall metrics and multi-source 5,671 image dataset summary
-    * **Audit History**: Chronological log of recent drone inspections with Track Risk Index telemetry
+  - Strict UI cleanliness: focused entirely on railway vision engineering without boxed white margins
+  - Full-bleed edge-to-edge cinematic hero band and unboxed 5-class taxonomy cards
+  - Dataset sample picker (1-click loading of real test split images) + custom drag-and-drop uploader
+  - Dynamic class filtering checkboxes and three-way visual canvas (YOLO overlay, original, side-by-side)
+  - Interactive lightbox, defect thumbnail zoom, and JSON/CSV triage export
+  - Clean model evaluation and compact dataset partition summary
   - Compiles with 0 TypeScript and Vite build errors
-  - 100% test preservation (116/116 backend tests green)
+  - 100% test preservation (119/119 backend tests green)
 
 ---
 
@@ -290,4 +292,4 @@ Web Dashboard will be accessible at: [http://localhost:5173](http://localhost:51
 pytest backend/tests/ -v
 ```
 
-All 116 tests will execute across configuration validation, dataset preprocessing & augmentation, geometric defect severity assessment, OpenCV vision annotation, YOLO model orchestration, and FastAPI REST endpoints.
+All 119 tests will execute across configuration validation, dataset preprocessing & augmentation, geometric defect severity assessment, OpenCV vision annotation, YOLO model orchestration, FastAPI REST endpoints, and sample image streaming.

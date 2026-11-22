@@ -4,7 +4,6 @@ import { Footer } from "@/components/Footer";
 import { HeroOverview } from "@/components/HeroOverview";
 import { InspectionWorkbench } from "@/components/InspectionWorkbench";
 import { ModelDatasetView } from "@/components/ModelDatasetView";
-import { AuditHistoryView } from "@/components/AuditHistoryView";
 import { getHealth } from "@/services/api";
 import { HealthResponse } from "@/types/api";
 
@@ -60,13 +59,16 @@ export const App: React.FC = () => {
 
         {activeTab === "workbench" && <InspectionWorkbench />}
 
-        {activeTab === "telemetry" && <ModelDatasetView health={health} />}
-
-        {activeTab === "history" && <AuditHistoryView />}
+        {activeTab === "metrics" && <ModelDatasetView health={health} />}
       </main>
 
-      {/* Editorial Navy Footer */}
-      <Footer />
+      {/* Minimal Navy Footer */}
+      <Footer
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      />
     </div>
   );
 };

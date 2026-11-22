@@ -1,8 +1,5 @@
 /**
  * Typed API Client for Railway Defect Inspection Backend.
- * 
- * Mohan Babu University - Dept. of CSE (AI & ML) - Team B6-B3.
- * Phase 5: React Frontend & Full-Stack Integration.
  */
 
 import {
@@ -10,6 +7,8 @@ import {
   InspectionHistoryResponse,
   InspectionResponse,
   MetricsResponse,
+  SampleItem,
+  SampleListResponse,
 } from "@/types/api";
 
 const API_BASE_URL =
@@ -83,6 +82,29 @@ export async function getHistory(limit: number = 20): Promise<InspectionHistoryR
     headers: { Accept: "application/json" },
   });
   return handleResponse<InspectionHistoryResponse>(response);
+}
+
+export async function getSamples(): Promise<SampleListResponse> {
+  const response = await fetch(`${API_BASE_URL}/samples`, {
+    method: "GET",
+    headers: { Accept: "application/json" },
+  });
+  return handleResponse<SampleListResponse>(response);
+}
+
+export function getSampleImageUrl(filename: string): string {
+  return `${API_BASE_URL}/samples/${encodeURIComponent(filename)}`;
+}
+
+export async function fetchSampleAsFile(sample: SampleItem): Promise<File> {
+  const imageUrl = getSampleImageUrl(sample.filename);
+  const response = await fetch(imageUrl);
+  if (!response.ok) {
+    throw new ApiError(`Failed to fetch sample image: ${response.statusText}`, response.status);
+  }
+  const blob = await response.blob();
+  const mimeType = blob.type || "image/jpeg";
+  return new File([blob], sample.filename, { type: mimeType });
 }
 
 export { ApiError, API_BASE_URL };

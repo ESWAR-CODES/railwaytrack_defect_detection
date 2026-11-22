@@ -86,3 +86,18 @@ class InspectionHistoryResponse(BaseModel):
     """Response containing a list of recent inspections."""
     total_inspections: int = Field(..., description="Total count of historical inspections in store")
     items: List[InspectionHistoryItem] = Field(default_factory=list, description="List of inspection history items")
+
+
+class SampleItem(BaseModel):
+    """Pre-loaded sample dataset image for live testing."""
+    id: str = Field(..., description="Unique sample identifier")
+    filename: str = Field(..., description="Image filename on disk or virtual synthetic file")
+    split: str = Field(..., description="Dataset split (test, val, train, synthetic)")
+    url: str = Field(..., description="Direct URL endpoint to fetch raw image bytes")
+    label: Optional[str] = Field(None, description="Human-readable defect hint or label summary")
+
+
+class SampleListResponse(BaseModel):
+    """List of available railway track samples for immediate demo execution."""
+    samples: List[SampleItem] = Field(default_factory=list, description="Available railway sample images")
+
